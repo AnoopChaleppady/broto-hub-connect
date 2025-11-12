@@ -1,10 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, Users, AlertCircle, ListChecks, BookOpen, Shield } from "lucide-react";
+import { Home, Users, AlertCircle, ListChecks, BookOpen, Shield, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
 
 const Navigation = () => {
   const location = useLocation();
-  const currentWeek = 16; // This would come from user context in real app
+  const { userRole, signOut } = useAuth();
 
   const navItems = [
     { path: "/", label: "Home", icon: Home },
@@ -14,8 +16,8 @@ const Navigation = () => {
     { path: "/resources", label: "Resources", icon: BookOpen },
   ];
 
-  // Add Senior Dashboard if week >= 15
-  if (currentWeek >= 15) {
+  // Add Senior Dashboard for admin and senior roles
+  if (userRole === "admin" || userRole === "senior") {
     navItems.push({ path: "/senior-dashboard", label: "Senior Dashboard", icon: Shield });
   }
 
@@ -51,6 +53,15 @@ const Navigation = () => {
                 </Link>
               );
             })}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => signOut()}
+              className="ml-2"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              Sign Out
+            </Button>
           </div>
 
           <div className="flex md:hidden">
